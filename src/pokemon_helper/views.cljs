@@ -38,4 +38,20 @@
 
 (defn main-panel []
   (let [active-panel (re-frame/subscribe [::subs/active-panel])]
-    (routes/panels @active-panel)))
+    [:<>
+     [:header.flex.border-b-8.border-black.rounded-t-full {:class "bg-[#DF0024]"}
+      [:div.grow]
+      [:h1.text-4xl.text-white.py-16 "ポケモンヘルパー"]
+      [:div.grow]]
+     [:main.container.mx-auto.px-4
+      (routes/panels @active-panel)]
+     [:footer.flex.border-t-8.border-x-2.border-b-2.border-black.rounded-b-full
+      [:div.grow]
+      [:p.py-10 "Created with:"
+       [:br]
+       "- ClojureScript"
+       [:br]
+       "- re-frame"
+       [:br]
+       "- tailwindcss"]
+      [:div.grow]]]))
