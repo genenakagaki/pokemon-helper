@@ -66,18 +66,6 @@
 
 (defmethod routes/panels :home-panel [] [home-panel])
 
-;; about
-
-(defn about-panel []
-  [:div
-   [:h1 "This is the About Page."]
-
-   [:div
-    [:a {:on-click #(dispatch [::events/navigate :home])}
-     "go to Home Page"]]])
-
-(defmethod routes/panels :about-panel [] [about-panel])
-
 (defn header []
   [:header
    [:div.flex.border-b-8.border-black.rounded-t-full {:class "bg-[#DF0024]"}
