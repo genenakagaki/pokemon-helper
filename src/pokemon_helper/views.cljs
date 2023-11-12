@@ -42,9 +42,10 @@
 (defn home-panel []
   [:div.container
    [:h2.text-2xl.pt-4 "どのポケモンでバトルするか"]
-   [:p.text-xl.pt-4 "相手はどんな属性？（2つまで）"]
-   [poketype-select]
-   [poketype-effectiveness]])
+   [:p.text-xl.pt-8 "相手はどんな属性？（2つまで）"]
+   [:div.grid.gap-0 {:class "grid-cols-1 md:grid-cols-2 md:gap-8"}
+    [poketype-select]
+    [poketype-effectiveness]]])
 
 (defmethod routes/panels :home-panel [] [home-panel])
 
