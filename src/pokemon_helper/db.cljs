@@ -132,3 +132,4 @@
                            :half [fire poison steel]
                            :none []}})   :selected-poketype-list []
    })
+

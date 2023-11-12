@@ -6,18 +6,27 @@
    [pokemon-helper.subs :as subs]
    ))
 
-
 ;; home
 
 (defn home-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
-    [:div
-     [:h1
-      (str "Hello from " @name ". This is the Home Page.")]
-
-     [:div
-      [:a {:on-click #(re-frame/dispatch [::events/navigate :about])}
-       "go to About Page"]]
+  (let [poketype-selection-list @(re-frame/subscribe [::subs/poketype-select-options])]
+    [:div.container
+     [:h2.text-2xl.pt-4 "どのポケモンでバトルするか"]
+     [:p.text-xl.pt-4 "相手はどんな属性？（2つまで）"]
+     [:div.grid.grid-cols-3.gap-3.py-4
+      (for [{:keys [name label selected?]} poketype-selection-list]
+        ^{:key name}
+        [:div.bg-black.rounded-2xl
+         [:button.w-full.rounded-2xl.py-4.border-b-2
+          {:class (str (:color label)
+                       " "
+                       (if selected?
+                         "opacity-100"
+                         "opacity-60"))
+           :on-click #(re-frame/dispatch [::events/select-poketype name])}
+          [:span.text-white.font-bold.drop-shadow
+           (:text label)]
+          ]])]
      ]))
 
 (defmethod routes/panels :home-panel [] [home-panel])
