@@ -4,6 +4,7 @@
    [pokemon-helper.events :as events]
    [pokemon-helper.routes :as routes]
    [pokemon-helper.subs :as subs]
+   ["react-feather" :as icon]
    ))
 
 (defn poketype-select []
@@ -28,7 +29,23 @@
          @(subscribe [::subs/poketype-labels-by-effectiveness])]
      ^{:key effectiveness}
      [:div.rounded-2xl.py-4
-      [:p.text-xl "攻撃力" effectiveness "倍の属性"]
+      [:p.text-xl
+       (let [{:keys [icon-name icon-color]}
+             (case effectiveness
+               4 {:icon-name icon/ChevronsUp
+                  :icon-color "text-green-500"}
+               2 {:icon-name icon/ChevronUp
+                  :icon-color "text-green-500"}
+               0.5 {:icon-name icon/ChevronDown
+                    :icon-color "text-red-600"}
+               0.25 {:icon-name icon/ChevronsDown
+                     :icon-color "text-red-600"}
+               0 {:icon-name icon/X
+                  :icon-color "text-red-600"}
+               :else "")]
+         [:> icon-name {:class (str icon-color " inline pb-1")
+                        :size "36"}])
+       "攻撃力" effectiveness "倍の属性"]
       [:div.flex.flex-wrap.gap-1.pt-2
        (for [{:keys [name label]} labels]
          ^{:key name}
