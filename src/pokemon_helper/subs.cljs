@@ -35,7 +35,6 @@
  (fn [poketype-m _]
    (poketype-labels poketype-m)))
 
-
 (re-frame/reg-sub
  ::selected-poketype-names
  (fn [db]
@@ -71,9 +70,65 @@
  (fn [[labels selected-names] _]
    (poketype-select-options labels selected-names)))
 
+(defn poketype-effectiveness
+  ([kw]
+   (case kw
+     :double 2
+     :half 0.5
+     :none 0))
+  ([type name]
+   (->> (:effectiveness type)
+        (map (fn [[kw types]]
+               (some #(when (= % name) (poketype-effectiveness kw)) types)))
+        (map #(if (nil? %)
+                1
+                %))
+        (apply *)))
+  ([type name1 name2]
+   (* (poketype-effectiveness type name1)
+      (poketype-effectiveness type name2))))
+
+(comment
+  (poketype-effectiveness :double)
+  (poketype-effectiveness :half)
+  (poketype-effectiveness :none)
+
+  (poketype-effectiveness (:normal (:poketype-m db/default-db)) :ghost)
+  (poketype-effectiveness (:normal (:poketype-m db/default-db)) :steel)
+  (poketype-effectiveness (:normal (:poketype-m db/default-db)) :normal)
+  (poketype-effectiveness (:fire (:poketype-m db/default-db)) :grass)
+  
+  (poketype-effectiveness (:normal (:poketype-m db/default-db)) :normal :ghost)
+  (poketype-effectiveness (:fire (:poketype-m db/default-db)) :grass :ice)
+  (poketype-effectiveness (:fire (:poketype-m db/default-db)) :fire :water)
+  )
+
+(defn poketype-labels-by-effectiveness [type-m selected-names]
+  (if (== (count selected-names) 0)
+    []
+    (->> type-m
+         (map (fn [[name type]]
+                (-> (poketype-label [name type] :ja)
+                    (assoc :effectiveness (->> (concat (list type) selected-names)
+                                               (apply poketype-effectiveness))))))
+         (filter #(not= (% :effectiveness) 1))
+         (group-by :effectiveness)
+         (sort-by first)
+         (reverse))))
+
+(comment
+  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [:fire])
+  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [])
+  )
+
+(re-frame/reg-sub
+ ::poketype-labels-by-effectiveness
+ :<- [::poketype-m]
+ :<- [::selected-poketype-names]
+ (fn [[poketype-m selected-names] _]
+   (poketype-labels-by-effectiveness poketype-m selected-names)))
+
 (re-frame/reg-sub
  ::active-panel
  (fn [db _]
    (:active-panel db)))
-
-(println (ns-interns 'pokemon-helper.subs))

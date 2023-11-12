@@ -27,6 +27,19 @@
           [:span.text-white.font-bold.drop-shadow
            (:text label)]
           ]])]
+     [:div
+      (for [[effectiveness labels] @(re-frame/subscribe [::subs/poketype-labels-by-effectiveness])]
+        ^{:key effectiveness}
+        [:div.rounded-2xl.py-4
+         [:p.text-xl "攻撃力" effectiveness "倍の属性"]
+         [:div.flex.flex-wrap.gap-1.pt-2
+          (for [{:keys [name label]} labels]
+            ^{:key name}
+            [:div.rounded-full
+             {:class (:color label)}
+             [:span.text-white.font-bold.drop-shadow.px-4.py-2
+              (:text label)]])]
+         ])]
      ]))
 
 (defmethod routes/panels :home-panel [] [home-panel])
