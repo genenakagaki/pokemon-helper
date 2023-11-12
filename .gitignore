@@ -25,3 +25,6 @@
 
 # tailwind
 /resources/public/css/compiled/
+
+# macos
+.DS_Store
