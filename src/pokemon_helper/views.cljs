@@ -58,7 +58,7 @@
 
 (defn home-panel []
   [:div.container
-   [:h2.text-2xl.pt-4 "どのポケモンでバトルするか"]
+   [:h2.text-2xl "どのポケモンでバトルするか"]
    [:p.text-xl.pt-8 "相手はどんな属性？（2つまで）"]
    [:div.grid.gap-0 {:class "grid-cols-1 md:grid-cols-2 md:gap-8"}
     [poketype-select]
@@ -87,8 +87,24 @@
       [:div.grow]
       [:h1.text-4xl.text-white.py-16 "ポケモンヘルパー"]
       [:div.grow]]
+     [:div.flex
+      [:div.grow]
+      [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
+       {:href "https://github.com/genenakagaki/pokemon-helper"
+        :target "_blank"
+        :class "bottom-[36px] hover:bg-blue-200"}
+       [:> icon/GitHub {:size "36"}]]
+      [:div.grow]]
      [:main.container.mx-auto.px-4
       (routes/panels @active-panel)]
+     [:div.flex
+      [:div.grow]
+      [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
+       {:href "https://twitter.com/genakag"
+        :target "_blank"
+        :class "top-[36px] hover:bg-blue-300"}
+       [:> icon/Twitter {:size "36"}]]
+      [:div.grow]]
      [:footer.flex.border-t-8.border-x-2.border-b-2.border-black.rounded-b-full
       [:div.grow]
       [:p.py-10 "Created with:"
