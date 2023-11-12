@@ -5,11 +5,6 @@
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- ::name
- (fn [db]
-   (:name db)))
-
-(re-frame/reg-sub
  ::poketype-m
  (fn [db]
    (:poketype-m db)))

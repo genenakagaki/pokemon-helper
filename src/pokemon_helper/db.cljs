@@ -20,8 +20,7 @@
 (def fairy :fairy)
 
 (def default-db
-  {:name "re-frame"
-   :poketype-m
+  {:poketype-m
    (array-map
     normal {:label {:text {:ja "ノーマル"
                            :en "Normal"}
