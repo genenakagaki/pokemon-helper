@@ -78,40 +78,48 @@
 
 (defmethod routes/panels :about-panel [] [about-panel])
 
+(defn header []
+  [:header
+   [:div.flex.border-b-8.border-black.rounded-t-full {:class "bg-[#DF0024]"}
+    [:div.grow]
+    [:h1.text-4xl.text-white.py-16 "ポケモンヘルパー"]
+    [:div.grow]]
+   [:div.flex
+    [:div.grow]
+    [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
+     {:href "https://github.com/genenakagaki/pokemon-helper"
+      :target "_blank"
+      :class "bottom-[36px] hover:bg-blue-200"}
+     [:> icon/GitHub {:size "36"}]]
+    [:div.grow]]])
+
+(defn footer []
+  [:footer 
+   [:div.flex
+    [:div.grow]
+    [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
+     {:href "https://twitter.com/genakag"
+      :target "_blank"
+      :class "top-[36px] hover:bg-blue-300"}
+     [:> icon/Twitter {:size "36"}]]
+    [:div.grow]]
+   [:div.flex.border-t-8.border-x-2.border-b-2.border-black.rounded-b-full
+    [:div.grow]
+    [:p.py-10 "Created with:"
+     [:br]
+     "- ClojureScript"
+     [:br]
+     "- re-frame"
+     [:br]
+     "- tailwindcss"]
+    [:div.grow]]])
+
 ;; main
 
 (defn main-panel []
   (let [active-panel (subscribe [::subs/active-panel])]
     [:<>
-     [:header.flex.border-b-8.border-black.rounded-t-full {:class "bg-[#DF0024]"}
-      [:div.grow]
-      [:h1.text-4xl.text-white.py-16 "ポケモンヘルパー"]
-      [:div.grow]]
-     [:div.flex
-      [:div.grow]
-      [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
-       {:href "https://github.com/genenakagaki/pokemon-helper"
-        :target "_blank"
-        :class "bottom-[36px] hover:bg-blue-200"}
-       [:> icon/GitHub {:size "36"}]]
-      [:div.grow]]
+     [header]
      [:main.container.mx-auto.px-4
       (routes/panels @active-panel)]
-     [:div.flex
-      [:div.grow]
-      [:a.relative.rounded-full.ring-8.ring-black.bg-white.p-3
-       {:href "https://twitter.com/genakag"
-        :target "_blank"
-        :class "top-[36px] hover:bg-blue-300"}
-       [:> icon/Twitter {:size "36"}]]
-      [:div.grow]]
-     [:footer.flex.border-t-8.border-x-2.border-b-2.border-black.rounded-b-full
-      [:div.grow]
-      [:p.py-10 "Created with:"
-       [:br]
-       "- ClojureScript"
-       [:br]
-       "- re-frame"
-       [:br]
-       "- tailwindcss"]
-      [:div.grow]]]))
+     [footer]]))
