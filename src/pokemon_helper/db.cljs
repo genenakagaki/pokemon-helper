@@ -1,4 +1,5 @@
-(ns pokemon-helper.db)
+(ns pokemon-helper.db
+  (:require [clojure.string :as s]))
 
 (def normal :normal)
 (def fire :fire)
@@ -19,8 +20,15 @@
 (def steel :steel)
 (def fairy :fairy)
 
+(defn default-language []
+  (let [lang (.-language js/navigator)]
+    (if (s/starts-with? lang "ja")
+      :ja
+      :en)))
+
 (def default-db
-  {:poketype-m
+  {:lang (default-language)
+   :poketype-m
    (array-map
     normal {:label {:text {:ja "ノーマル"
                            :en "Normal"}

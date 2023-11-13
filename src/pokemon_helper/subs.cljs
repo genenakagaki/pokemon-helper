@@ -5,6 +5,11 @@
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
+ ::lang
+ (fn [db]
+   (:lang db)))
+
+(re-frame/reg-sub
  ::poketype-m
  (fn [db]
    (:poketype-m db)))
@@ -15,20 +20,21 @@
      :label (-> (:label type)
                 (assoc :text (get-in type [:label :text language])))}))
 
-(defn poketype-labels [poketype-m]
+(defn poketype-labels [poketype-m lang]
   (->> poketype-m
-       (map #(poketype-label % :ja))))
+       (map #(poketype-label % lang))))
 
 (comment
-  (poketype-label (first (:poketype-m db/default-db)) :ja)
-  (poketype-labels (:poketype-m db/default-db))
+  (poketype-label (first (:poketype-m db/default-db)) :en)
+  (poketype-labels (:poketype-m db/default-db) :en)
   )
 
 (re-frame/reg-sub
  ::poketype-labels
  :<- [::poketype-m]
- (fn [poketype-m _]
-   (poketype-labels poketype-m)))
+ :<- [::lang]
+ (fn [[poketype-m lang] _]
+   (poketype-labels poketype-m lang)))
 
 (re-frame/reg-sub
  ::selected-poketype-names
@@ -55,7 +61,7 @@
        (map #(assoc % :selected? (selected-poketype? (:name %) selected-names)))))
 
 (comment
-  (poketype-select-options (poketype-labels (:poketype-m db/default-db)) [:normal])
+  (poketype-select-options (poketype-labels (:poketype-m db/default-db) :en) [:normal])
   )
 
 (re-frame/reg-sub
@@ -98,12 +104,12 @@
   (poketype-effectiveness (:fire (:poketype-m db/default-db)) :fire :water)
   )
 
-(defn poketype-labels-by-effectiveness [type-m selected-names]
+(defn poketype-labels-by-effectiveness [type-m selected-names lang]
   (if (== (count selected-names) 0)
     []
     (->> type-m
          (map (fn [[name type]]
-                (-> (poketype-label [name type] :ja)
+                (-> (poketype-label [name type] lang)
                     (assoc :effectiveness (->> (concat (list type) selected-names)
                                                (apply poketype-effectiveness))))))
          (filter #(not= (% :effectiveness) 1))
@@ -112,16 +118,17 @@
          (reverse))))
 
 (comment
-  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [:fire])
-  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [])
+  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [:fire] :en)
+  (poketype-labels-by-effectiveness (:poketype-m db/default-db) [] :en)
   )
 
 (re-frame/reg-sub
  ::poketype-labels-by-effectiveness
  :<- [::poketype-m]
  :<- [::selected-poketype-names]
- (fn [[poketype-m selected-names] _]
-   (poketype-labels-by-effectiveness poketype-m selected-names)))
+ :<- [::lang]
+ (fn [[poketype-m selected-names lang] _]
+   (poketype-labels-by-effectiveness poketype-m selected-names lang)))
 
 (re-frame/reg-sub
  ::active-panel

@@ -10,6 +10,13 @@
  (fn-traced [_ _]
             db/default-db))
 
+(re-frame/reg-event-db
+ ::toggle-lang
+ (fn-traced [db _]
+            (assoc db :lang (if (= :en (:lang db))
+                              :ja
+                              :en))))
+
 (defn select-poketype [db name]
   (let [{:keys [selected-poketype-names]} db]
     (assoc db :selected-poketype-names
